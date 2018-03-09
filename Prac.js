@@ -35,6 +35,7 @@ app.get('/', (req, res) => {
 
 app.post('/quotes', (req, res) => {
     var response={
+        "id" : req.param.id,
         "name" : req.body.name,
         "quote" : req.body.quote,
         "error" : false,
@@ -54,12 +55,56 @@ app.post('/quotes', (req, res) => {
   })
 
   app.get('/quotes2', (req, res) => {
-   var cursor= db.collection('mycollection').find().toArray(function(err, results) {
+   var cursor= [];
+    db.collection('mycollection').find().toArray(function(err, results) {
       console.log(results)
     })
-    var json=JSON.parse(cursor);
-    res.send(json);
+    var json=JSON.stringify(cursor)
+    console.log(json);
+    //var json=JSON.parse(cursor);
+    // var jsonData = JSON.parse(cursor);
+    // console.log(jsonData)
+    // for (var i = 0; i < jsonData.counters.length; i++) {
+    // var counter = jsonData.counters[i];
+    // console.log(counter.counter_name);
+    // }
+    res.send(cursor);
   })
+
+ 
+
+
+app.put('/quotes3/:id', (req, res) => {
+  db.collection('mycollection')
+  .findOneAndUpdate({id: req.param.id}, {
+    $set: {
+      id:req.param.id,
+      name: req.body.name,
+      quote: req.body.quote
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: true
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.send(result)
+    console.log(result)
+  })
+})
+
+  
+
+	app.delete('/quotes4/:id', (req, res)=>{
+		db.collection('mycollection').findOneAndDelete({
+			id: req.param.id
+		},(err, result)=>{
+			if(err) return req.send(500, err)
+        res.send({message: 'data is deleted'})
+        console.log(result);
+		})
+	})
+
+
 
 
 app.listen(port);
