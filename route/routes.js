@@ -1,12 +1,12 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-var db = require('../Db/mongodb');
+var db = require('../db/mongodb');
 var path = require('path');
 var processor =require('./module')
 
 router.get('/', function(req, res) {
-    res.send(File(path.resolve(__dirname + '/../index.html')));
+    res.send("App Working!");
   });
 
   router.route('/api/v1/quotes')

@@ -1,10 +1,9 @@
 var MongoClient = require('mongodb').MongoClient
 var ObjectID =require('mongodb').ObjectId
 var fs=require('fs');
-var processor = require('../Routes/module');
-  var mongoUri = process.env.MONGOLAB_URI ||
-        process.env.MONGOHQ_URL ||
-        'mongodb://localhost:27017/mydb';
+require('dotenv').config();
+var processor = require('../route/module');
+  var mongoUri = process.env.MONGO_DB_URL;
   //const dbName = 'mydb';
 
 
@@ -12,8 +11,8 @@ var processor = require('../Routes/module');
 	if (error) return process.exit(1);
 	console.log('Connection is okay');
     console.log('Successfully connected to mongodb');
-     db = database.db('mydb');
-     collection = db.collection('mycollection');
+     db = database.db(process.env.MONGO_DB_NAME);
+     collection = db.collection(process.env.MONGO_DB_COLLECTION);
    //console.log(collection);
 	  //database.close();
     });
@@ -45,9 +44,9 @@ var processor = require('../Routes/module');
                     return callback(response);
                 }
                 message='Data from databse returned';
-                var response =processor.getResponse(message);
+                var response =processor.getResponse(results);
                 //console.log(result);
-                callback(results);
+                callback(response);
               })
         },
 

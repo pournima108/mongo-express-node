@@ -4,7 +4,7 @@ module.exports = {
             "error_status":false,
             "status_code":200,
             "result":rows,
-            "success_message": message
+            "message": message
         }
         return response;
     },
