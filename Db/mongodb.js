@@ -45,10 +45,11 @@ module.exports ={
         "updateDocuments":function(req,callback){
             var name=req.body.name;
             var quote=req.body.quote;
+            var id=req.param.id
             console.log(name);
             console.log(quote);
                 db.collection('mycollection')
-                .update({'_id':ObjectID(req.body.id)},
+                .update({'id':req.param.id},
                {
                 $set: {
                'name': req.body.name,
@@ -63,7 +64,7 @@ module.exports ={
                         return callback(response);
                     }
                     message='Data updated';
-                    var response =processor.getResponse(ObjectID());
+                    var response =processor.getResponse(message);
                     logger.info(message);
                     callback(response);
                 })        
@@ -71,8 +72,9 @@ module.exports ={
         //Update documents
 
         "deleteDocuments":function(req,callback){
-            db.collection('mycollection').findOneAndDelete({
-                name:req.body.name
+            var id=req.param.id;
+            db.collection('mycollection').remove({
+               ' id':req.param.id,
             },(err, result)=>{
                 if(err){
                     logger.error("DB error",err)
@@ -80,7 +82,7 @@ module.exports ={
                     return callback(response);
                 }
                 message='Data deleted';
-                var response =processor.getResponse(ObjectID());
+                var response =processor.getResponse(message);
                 logger.info(message);
                 callback(response);
             })
