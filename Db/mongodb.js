@@ -1,91 +1,91 @@
-var MongoClient = require('mongodb').MongoClient
-var ObjectID =require('mongodb').ObjectId
-var fs=require('fs');
-require('dotenv').config();
+var connection = require('./connection')
 var processor = require('../route/module');
-  var mongoUri = process.env.MONGO_DB_URL;
-  //const dbName = 'mydb';
+var ObjectID =require('mongodb').ObjectId
+var logger = require('../route/logger');
+//Package Dependencies
 
+db = process.env.MONGO_DB_NAME
 
-  MongoClient.connect(mongoUri, (error, database) => {
-	if (error) return process.exit(1);
-	console.log('Connection is okay');
-    console.log('Successfully connected to mongodb');
-     db = database.db(process.env.MONGO_DB_NAME);
-     collection = db.collection(process.env.MONGO_DB_COLLECTION);
-   //console.log(collection);
-	  //database.close();
-    });
-    
-    module.exports ={
+module.exports ={
         "insertDocuments": function(req,callback){
             var response={
                 "name" : req.body.name,
                 "quote" : req.body.quote,
             }
-            //console.log(response);
             db.collection('mycollection').save(response, (err, result) => {
                 if (err) {
+                    logger.error("DB error",err)
                     var response =processor.dbErrorResponse();
                     return callback(response);
                 }
                 message='saved to database';
-                var response =processor.getResponse(message);
-                //console.log(result);
+                var response =processor.getResponse(ObjectID());
+                logger.info(message);
                 callback(response);
               })
 
         },
+        //Insert Documents
 
         "queryDocuments": function(req,callback){
             var cursor= db.collection('mycollection').find().toArray(function(err, results) {
                 if(err){
+                    logger.error("DB error",err)
                     var response =processor.dbErrorResponse();
                     return callback(response);
                 }
-                message='Data from databse returned';
+                message='Data from database returned';
                 var response =processor.getResponse(results);
-                //console.log(result);
+                logger.info(message);
                 callback(response);
               })
         },
+        //Query documents 
 
         "updateDocuments":function(req,callback){
-            db.collection('mycollection')
-            .findOneAndUpdate({id: req.param.id}, {
-            $set: {
-           name: req.body.name,
-           quote: req.body.quote
-             }
-             }, {
-            sort: {_id: -1},
-             upsert: true
-            }, (err, result) => {
-                if(err){
-                    var response =processor.dbErrorResponse();
-                    return callback(response);
-                }
-                message='Data updated';
-                var response =processor.getResponse(message);
-                //console.log(result);
-                callback(response);
-            })
+            var name=req.body.name;
+            var quote=req.body.quote;
+            console.log(name);
+            console.log(quote);
+                db.collection('mycollection')
+                .update({'_id':ObjectID(req.body.id)},
+               {
+                $set: {
+               'name': req.body.name,
+               'quote': req.body.quote
+                 },
+                 }, { sort: {_id: -1},
+                     upsert: true },
+                 (err, result) => {
+                    if(err){
+                        logger.error("DB error",err)
+                        var response =processor.dbErrorResponse();
+                        return callback(response);
+                    }
+                    message='Data updated';
+                    var response =processor.getResponse(ObjectID());
+                    logger.info(message);
+                    callback(response);
+                })        
         },
+        //Update documents
 
         "deleteDocuments":function(req,callback){
             db.collection('mycollection').findOneAndDelete({
                 name:req.body.name
             },(err, result)=>{
                 if(err){
+                    logger.error("DB error",err)
                     var response =processor.dbErrorResponse();
                     return callback(response);
                 }
                 message='Data deleted';
-                var response =processor.getResponse(message);
-                //console.log(result);
+                var response =processor.getResponse(ObjectID());
+                logger.info(message);
                 callback(response);
             })
         }
+        //Delete Documents
     }
 
     
