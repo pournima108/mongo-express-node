@@ -28,8 +28,14 @@ router.get('/', function(req, res) {
   })
   //Post the data 
   router.route('/api/v1/quotes/:id')
+  
 
-
+  .get(function(req, res) {
+    var response = db.querySingleDocument(req, function(response) {
+        res.send(response); 
+    });
+  })
+  //Get the data
   .put(function(req, res) {
      var response = db.updateDocuments(req, function(response) {
         res.send(response);

@@ -19,7 +19,7 @@ var logger = new (winston.createLogger)({
       }),
     new (winston.transports.File)({
       name: 'error-file',
-      filename: `api/${logDir}/error.log`,
+      filename: `logs/${logDir}/error.log`,
       level: env === 'production' ? 'error' : 'warn',
       json: false
     })

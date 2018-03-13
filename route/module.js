@@ -1,9 +1,9 @@
 module.exports = {
-    "getResponse": function (rows, message) {
+    "getResponse": function (document, message) {
         var response = {
             "error_status":false,
             "status_code":200,
-            "result":rows,
+            "result":document,
             "message": message
         }
         return response;

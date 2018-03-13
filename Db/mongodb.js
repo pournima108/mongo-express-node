@@ -34,58 +34,113 @@ module.exports ={
                     var response =processor.dbErrorResponse();
                     return callback(response);
                 }
+                if(results[0] == null){
+                    var message = "No documents available";
+                    var response =processor.getPageError(message);
+                    logger.warn(message);
+                    return callback(response)
+                
+                  }else{
+                message='Data from database returned';
+                var response =processor.getResponse(results);
+                logger.info(message);
+                callback(response);
+                  }
+        
+              })
+        },
+        //Query documents 
+        
+        "querySingleDocument": function(req,callback){
+            var id = req.params.id;
+            var query={'id' : id};
+            //var id=JSON.stringify(_id)
+            console.log(id)
+            var options={$sort:id};
+          
+            db.collection('mycollection').findOne({_id : ObjectID(id)},(err, results) =>{
+                console.log(results)
+                if(err){
+                    logger.error("DB error",err)
+                    var response =processor.dbErrorResponse();
+                    return callback(response);
+                }
+                if(results == null){
+                    var message = "Id was not found";
+                    var response =processor.getPageError(message);
+                    logger.warn(message);
+                    return callback(response);
+                }
                 message='Data from database returned';
                 var response =processor.getResponse(results);
                 logger.info(message);
                 callback(response);
               })
         },
-        //Query documents 
+    
+        //Query to find single document
 
         "updateDocuments":function(req,callback){
             var name=req.body.name;
             var quote=req.body.quote;
-            var id=req.param.id
-            console.log(name);
-            console.log(quote);
+            var id=req.params.id
+            console.log(id);
                 db.collection('mycollection')
-                .update({'id':req.param.id},
+                .findOneAndUpdate({_id:ObjectID(id)},
                {
                 $set: {
                'name': req.body.name,
                'quote': req.body.quote
                  },
-                 }, { sort: {_id: -1},
-                     upsert: true },
-                 (err, result) => {
+                 },
+                 (err, results) => {
+                     console.log(results)
                     if(err){
                         logger.error("DB error",err)
                         var response =processor.dbErrorResponse();
                         return callback(response);
                     }
-                    message='Data updated';
-                    var response =processor.getResponse(message);
-                    logger.info(message);
-                    callback(response);
-                })        
+                    if(results.value == null){
+                        var message = "Id was not found";
+                        var response =processor.getPageError(message);
+                        logger.warn(message);
+                        return callback(response);
+                      }
+                      else{
+                        var  message='Data updated';
+                        var response =processor.getResponse(message);
+                        logger.info(message);
+                        callback(response);
+                      }
+                }) ;       
         },
         //Update documents
 
         "deleteDocuments":function(req,callback){
-            var id=req.param.id;
-            db.collection('mycollection').remove({
-               ' id':req.param.id,
-            },(err, result)=>{
+            var id=req.params.id;
+            console.log(id)
+            db.collection('mycollection').findOneAndDelete({
+                _id:ObjectID(id),
+            },(err,results)=>{
+                console.log(results)
                 if(err){
                     logger.error("DB error",err)
                     var response =processor.dbErrorResponse();
                     return callback(response);
                 }
-                message='Data deleted';
-                var response =processor.getResponse(message);
-                logger.info(message);
-                callback(response);
-            })
+                if(results.value == null){
+                    var message = "Id was not found";
+                    var response =processor.getPageError(message);
+                    logger.warn(message);
+                    return callback(response)
+                
+                  } else{
+                       var message="data deleted";
+                        var response =processor.getResponse(message)
+                        logger.info(message);
+                        callback(response);
+                  }  
+            });
         }
         //Delete Documents
     }
