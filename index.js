@@ -2,7 +2,7 @@ var express = require('express');
 var Request = require("request");
 var bodyParser = require('body-parser');
 var path = require('path');
-var morgan = require('morgan');
+var morgan= require('morgan');
 var fs=require('fs');
 //Package Dependencies
 
@@ -16,8 +16,11 @@ var app = express();
 var port = process.env.PORT || 3000;
 //Dynamic PORT allocation
 
-var accessLogStream = fs.createWriteStream(__dirname + '/logs/access.log', {flags: 'a'});
-app.use(morgan('common'));
+//var accessLogStream = fs.createWriteStream(__dirname + '/logs/access.log', {flags: 'a'});
+app.use(morgan('common',{
+    stream:fs.createWriteStream(__dirname + '/logs/access.log', {flags: 'a'})
+}));
+
 //Access logs
 
 

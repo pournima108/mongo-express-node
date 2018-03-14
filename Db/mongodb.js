@@ -94,7 +94,6 @@ module.exports ={
                  },
                  },
                  (err, results) => {
-                     console.log(results)
                     if(err){
                         logger.error("DB error",err)
                         var response =processor.dbErrorResponse();
@@ -122,7 +121,6 @@ module.exports ={
             db.collection('mycollection').findOneAndDelete({
                 _id:ObjectID(id),
             },(err,results)=>{
-                console.log(results)
                 if(err){
                     logger.error("DB error",err)
                     var response =processor.dbErrorResponse();
