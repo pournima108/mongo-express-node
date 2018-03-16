@@ -1,14 +1,17 @@
-var connection = require('./connection')
+// var connection = require('./connection')
 var processor = require('../route/module');
 var ObjectID =require('mongodb').ObjectId
 var logger = require('../route/logger');
+//require('dotenv').config();
+var mongoUri = process.env.MONGO_DB_URL;
+
 //Package Dependencies
 
-db = process.env.MONGO_DB_NAME
 
+db=process.env.MONGO_DB_NAME
 module.exports ={
         "insertDocuments": function(req,callback){
-            var response={
+        var response={
                 "name" : req.body.name,
                 "quote" : req.body.quote,
             }
@@ -68,7 +71,7 @@ module.exports ={
                 if(results == null){
                     var message = "Id was not found";
                     var response =processor.getPageError(message);
-                    logger.warn(message);
+                    logger.error(message);
                     return callback(response);
                 }
                 message='Data from database returned';

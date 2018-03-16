@@ -14,7 +14,6 @@ if (!fs.existsSync(logDir)) {
 const tsFormat = () => (new Date()).toLocaleTimeString();
 var logger = new (winston.createLogger)({
   transports: [
-   
       new (winston.transports.Console)({
           timestamp: tsFormat,
           colorize:true,
@@ -24,7 +23,7 @@ var logger = new (winston.createLogger)({
       name: 'error-file',
       filename: `/${logDir}/error.log`,
       level: env === 'production' ? 'error' : 'warn',
-      json: false
+      //json: false
     })
   ]
 });

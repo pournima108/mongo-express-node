@@ -5,7 +5,16 @@ var db = require('../db/mongodb');
 var path = require('path');
 var morgan = require('morgan');
 var processor =require('./module')
+var ap=require('../index.js');
 //Package Dependencies
+
+ class Approuter{
+  
+ 
+}
+app.get(db)
+
+
 
 router.get('/', function(req, res) {
     res.send("App Working!");
