@@ -16,10 +16,12 @@ module.exports=
             var response =processor.dbErrorResponse();
             console.log("cannot connect");
         }
+        else{
 	console.log('Connection is okay');
     console.log('Successfully connected to mongodb');
      db = database.db(process.env.MONGO_DB_NAME);
      collection = db.collection(process.env.MONGO_DB_COLLECTION);
+        }
  } )
 }
 
