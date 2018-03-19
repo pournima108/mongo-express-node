@@ -8,13 +8,6 @@ var processor =require('./module')
 var ap=require('../index.js');
 //Package Dependencies
 
- class Approuter{
-  
- 
-}
-app.get(db)
-
-
 
 router.get('/', function(req, res) {
     res.send("App Working!");

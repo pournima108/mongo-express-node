@@ -1,9 +1,8 @@
-// var connection = require('./connection')
+ var connection = require('./connection')
 var processor = require('../route/module');
 var ObjectID =require('mongodb').ObjectId
 var logger = require('../route/logger');
-//require('dotenv').config();
-var mongoUri = process.env.MONGO_DB_URL;
+
 
 //Package Dependencies
 
